@@ -73,7 +73,7 @@ class BudgetImporter(GeneralImporter):
                 txn.postings.append(
                     data.Posting(
                         trans_account,
-                        amount.Amount(D(trans_amount), 'EUR'),
+                        amount.Amount(round(-1*D(trans_amount), 2), 'EUR'),
                         None, None, None, None
                     )
                 )

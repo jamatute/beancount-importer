@@ -8,6 +8,29 @@ from beancount.core import data
 from beancount.core import flags
 
 
+def generate_transaction(meta, trans_date, trans_payee, trans_description,
+                         trans_account, trans_amount):
+    txn = data.Transaction(
+        meta=meta,
+        date=trans_date,
+        flag=flags.FLAG_OKAY,
+        payee=trans_payee,
+        narration=trans_description,
+        tags=set(),
+        links=set(),
+        postings=[],
+    )
+
+    txn.postings.append(
+        data.Posting(
+            trans_account,
+            amount.Amount(round(-1*D(trans_amount), 2), 'EUR'),
+            None, None, None, None
+        )
+    )
+    return txn
+
+
 class TestGeneralImporter(unittest.TestCase):
     def setUp(self):
         self.gi = GeneralImporter()
@@ -39,27 +62,19 @@ class TestBudgetImporter(unittest.TestCase):
         trans_account = 'Expenses:Trips'
         trans_payee = 'NY'
         trans_description = 'awesome_description'
-        trans_amount = '25'
-        meta = data.new_metadata('tests/test_data/budget.csv', 0)
-        txn = data.Transaction(
-            meta=meta,
-            date=trans_date,
-            flag=flags.FLAG_OKAY,
-            payee=trans_payee,
-            narration=trans_description,
-            tags=set(),
-            links=set(),
-            postings=[],
-        )
-
-        txn.postings.append(
-            data.Posting(
+        trans_amount = '-25'
+        meta = data.new_metadata(self.file.name, 0)
+        self.assertEqual(
+            generate_transaction(
+                meta,
+                trans_date,
+                trans_payee,
+                trans_description,
                 trans_account,
-                amount.Amount(-1*D(trans_amount), 'EUR'),
-                None, None, None, None
-            )
+                trans_amount,
+            ),
+            extracted_data[0]
         )
-        self.assertEqual(txn, extracted_data[0])
 
     def test_budget_importer_general_assets_extract(self):
         extracted_data = self.gi.extract(self.file)
@@ -67,27 +82,39 @@ class TestBudgetImporter(unittest.TestCase):
         trans_account = 'Assets:Debt:Homer'
         trans_payee = 'Abuh'
         trans_description = 'Lollipop'
-        trans_amount = '10'
-        meta = data.new_metadata('tests/test_data/budget.csv', 4)
-        txn = data.Transaction(
-            meta=meta,
-            date=trans_date,
-            flag=flags.FLAG_OKAY,
-            payee=trans_payee,
-            narration=trans_description,
-            tags=set(),
-            links=set(),
-            postings=[],
+        trans_amount = '-10'
+        meta = data.new_metadata(self.file.name, 4)
+        self.assertEqual(
+            generate_transaction(
+                meta,
+                trans_date,
+                trans_payee,
+                trans_description,
+                trans_account,
+                trans_amount,
+            ),
+            extracted_data[4]
         )
 
-        txn.postings.append(
-            data.Posting(
+    def test_budget_importer_decimal_amount(self):
+        extracted_data = self.gi.extract(self.file)
+        trans_date = datetime.datetime.fromtimestamp(1478171818)
+        trans_account = 'Expenses:Groceries'
+        trans_payee = 'Salad'
+        trans_description = ''
+        trans_amount = '-2.89'
+        meta = data.new_metadata(self.file.name, 1)
+        self.assertEqual(
+            generate_transaction(
+                meta,
+                trans_date,
+                trans_payee,
+                trans_description,
                 trans_account,
-                amount.Amount(-1*D(trans_amount), 'EUR'),
-                None, None, None, None
-            )
+                trans_amount,
+            ),
+            extracted_data[1]
         )
-        self.assertEqual(txn, extracted_data[4])
 
 
 if __name__ == '__main__':
