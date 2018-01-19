@@ -77,6 +77,12 @@ class BudgetImporter(GeneralImporter):
                         None, None, None, None
                     )
                 )
+                txn.postings.append(
+                    data.Posting(
+                        'Assets:Cash',
+                        None, None, None, None, None
+                    )
+                )
 
                 entries.append(txn)
         return entries

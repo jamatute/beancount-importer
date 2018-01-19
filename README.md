@@ -5,10 +5,15 @@ Here are a pair of beancount importers:
 * For the [F-droid Budget app](https://f-droid.org/en/packages/com.notriddle.budget/)
 * For a bank csv
 
+Thank you to [mterwill](https://github.com/mterwill), I took his
+[gist](https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8) as
+reference
+
 ## Features
 
 * If the Budget envelope starts with `Debt:` it will count as an Asset else it
   will be counted as an Expense
+* It will assume `Assets:Cash` as the default second transaction posting
 
 ## Installation
 
@@ -27,6 +32,12 @@ pip3 install -r requirements.txt
 python3 setup.py install
 ```
 
+## Use
+
+```bash
+bean-export config.py /path/to/budget.csv
+```
+
 ## Test
 
 If you want to test the importers run:
@@ -41,6 +52,7 @@ To check the coverage run:
 ```bash
 pytest --cov beancount_importers tests
 ```
+
 ## Author
 
 `beancount-importers` was created by [jamatute](https://github.com/jamatute)

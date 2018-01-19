@@ -28,6 +28,13 @@ def generate_transaction(meta, trans_date, trans_payee, trans_description,
             None, None, None, None
         )
     )
+    txn.postings.append(
+        data.Posting(
+            'Assets:Cash',
+            None, None, None, None, None
+        )
+    )
+
     return txn
 
 
