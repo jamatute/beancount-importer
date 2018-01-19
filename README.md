@@ -7,7 +7,8 @@ Here are a pair of beancount importers:
 
 ## Features
 
-* Given a list of alias set up the correct name
+* If the Budget envelope starts with `Debt:` it will count as an Asset else it
+  will be counted as an Expense
 
 ## Installation
 
@@ -32,14 +33,15 @@ If you want to test the importers run:
 
 ```bash
 pip3 install -r requirements-tests.txt
-pytest
+python -m pytest
 ```
 
 ## Author
 
-`kernel_config` was created by [jamatute](https://github.com/jamatute)
+`beancount-importers` was created by [jamatute](https://github.com/jamatute)
 
 ## License
+
 GNU General Public License v2.0
 
 See [COPYING](./COPYING) to see the full text.
