@@ -1,6 +1,5 @@
 import unittest
 import datetime
-import pytest
 from unittest.mock import Mock
 from beancount_importers import GeneralImporter, BudgetImporter
 from beancount.core.number import D
@@ -29,6 +28,10 @@ class TestBudgetImporter(unittest.TestCase):
 
     def test_budget_importer_identify_files(self):
         self.assertTrue(self.gi.identify(self.file))
+
+    def test_budget_import_other_filenames(self):
+        self.file.name = 'tests/test_data/budget.txt'
+        self.assertFalse(self.gi.identify(self.file))
 
     def test_budget_importer_general_expense_extract(self):
         extracted_data = self.gi.extract(self.file)

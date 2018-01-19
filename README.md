@@ -33,9 +33,14 @@ If you want to test the importers run:
 
 ```bash
 pip3 install -r requirements-tests.txt
-python -m pytest
+pytest
 ```
 
+To check the coverage run:
+
+```bash
+pytest --cov beancount_importers tests
+```
 ## Author
 
 `beancount-importers` was created by [jamatute](https://github.com/jamatute)
