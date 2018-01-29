@@ -1,0 +1,3 @@
+- regexp: '.*RISEUP.*'
+  account: 'Expenses:Bills:Email'
+  payee: 'Riseup'

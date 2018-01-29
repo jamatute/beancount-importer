@@ -9,11 +9,24 @@ Thank you to [mterwill](https://github.com/mterwill), I took his
 [gist](https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8) as
 reference
 
-## Features
+## Features for the Budget importer
 
 * If the Budget envelope starts with `Debt:` it will count as an Asset else it
   will be counted as an Expense
 * It will assume `Assets:Cash` as the default second transaction posting
+
+## Features for the bank importer
+
+The CSV must have the following columns:
+
+* empty column
+* Execution date of the transfer
+* Date of value
+* Description
+* Import
+* Global account amount
+
+The name of the file must be "Data-{{ account_name }}.csv"
 
 ## Installation
 
