@@ -5,8 +5,9 @@ import sys
 sys.path.append(os.path.dirname(__file__))
 
 # importers located in the importers directory
-from beancount_importers import BudgetImporter
+from beancount_importers import BudgetImporter, BankImporter
 
 CONFIG = [
     BudgetImporter(),
+    BankImporter(),
 ]

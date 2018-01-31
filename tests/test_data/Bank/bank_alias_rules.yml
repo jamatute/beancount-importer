@@ -1,0 +1,8 @@
+- regexp: '.*RISEUP.*'
+  account: 'Expenses:Bills:Email'
+  payee: 'Riseup'
+  description: 'Donation to Riseup'
+- regexp: '.*PAYROLL.*'
+  account: 'Income:MyCompany'
+  payee: 'MyCompany'
+  description: 'Payroll'
