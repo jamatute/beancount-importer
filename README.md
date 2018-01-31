@@ -26,7 +26,19 @@ The CSV must have the following columns:
 * Import
 * Global account amount
 
-The name of the file must be "Data-{{ account_name }}.csv"
+The name of the file must be "Data-{{ asset_account_name }}.csv"
+
+You can specify a yaml of rules to match by default in
+`~/.config/beancount-importers/bank_alias_rules.yml`, for example:
+
+```yaml
+- regexp: '.*RISEUP.*'
+  account: 'Expenses:Bills:Email'
+  payee: 'Riseup'
+  description: 'Donation to Riseup'
+```
+
+Right now you must fill all the keys for each dictionary, or it won't work.
 
 ## Installation
 

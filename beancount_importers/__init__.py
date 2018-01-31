@@ -89,6 +89,10 @@ class BudgetImporter(GeneralImporter):
         return entries
 
 
+class BankException(Exception):
+    "Exception for Bank beancount importer"
+
+
 class BankImporter(GeneralImporter):
     def __init__(
         self,
@@ -106,52 +110,54 @@ class BankImporter(GeneralImporter):
             return False
 
     def _import_alias_rules(self):
-        with open(self.alias_rules_path, 'r') as f:
+        with open(os.path.expanduser(self.alias_rules_path), 'r') as f:
             self.alias_rules = yaml.safe_load(f)
 
     def _extract_account(self, concept_string):
-        pass
+        for rule in self.alias_rules:
+            if re.match(rule['regexp'], concept_string):
+                return rule
+        raise BankException('RuleNotFound')
 
     def extract(self, f):
+        self._import_alias_rules()
         entries = []
         with open(f.name, 'r') as f:
-            for index, row in enumerate(csv.reader(f)):
+            for index, row in enumerate(csv.reader(f, delimiter=';')):
                 meta = data.new_metadata(f.name, index)
-                # Budget timestamp has milisecond value that we need to strip
-                # so that datetime can parse it -> [:-3]
-                trans_date = datetime.datetime.strptime(row[2], "%d-%m-%Y")
-                trans_account = self._extract_account(row[3])
-#                if re.match('Debt:*', trans_account):
-#                    trans_account = 'Assets:{}'.format(trans_account)
-#                else:
-#                    trans_account = 'Expenses:{}'.format(trans_account)
-#                trans_payee = row[3].split(':')[0]
-#                trans_description = ' '.join(row[3].split(':')[1:])
-#                trans_amount = float(row[2]) / 100
-#                txn = data.Transaction(
-#                    meta=meta,
-#                    date=trans_date,
-#                    flag=flags.FLAG_OKAY,
-#                    payee=trans_payee,
-#                    narration=trans_description,
-#                    tags=set(),
-#                    links=set(),
-#                    postings=[],
-#                )
-#
-#                txn.postings.append(
-#                    data.Posting(
-#                        trans_account,
-#                        amount.Amount(round(-1*D(trans_amount), 2), 'EUR'),
-#                        None, None, None, None
-#                    )
-#                )
-#                txn.postings.append(
-#                    data.Posting(
-#                        'Assets:Cash',
-#                        None, None, None, None, None
-#                    )
-#                )
-#
-#                entries.append(txn)
-#        return entries
+                trans_date = datetime.datetime.strptime(row[2], "%d/%m/%Y")
+                extracted_account = self._extract_account(row[3])
+                trans_account = extracted_account['account']
+                trans_payee = extracted_account['payee']
+                trans_description = extracted_account['description']
+                trans_amount = float(row[4])
+                trans_second_posting_account = 'Assets:{}'.format(
+                    re.sub(r'Data-(.*).csv', r'\1', os.path.basename(f.name)),
+                )
+                txn = data.Transaction(
+                    meta=meta,
+                    date=trans_date,
+                    flag=flags.FLAG_OKAY,
+                    payee=trans_payee,
+                    narration=trans_description,
+                    tags=set(),
+                    links=set(),
+                    postings=[],
+                )
+
+                txn.postings.append(
+                    data.Posting(
+                        trans_account,
+                        amount.Amount(round(-1*D(trans_amount), 2), 'EUR'),
+                        None, None, None, None
+                    )
+                )
+                txn.postings.append(
+                    data.Posting(
+                        trans_second_posting_account,
+                        None, None, None, None, None
+                    )
+                )
+
+                entries.append(txn)
+        return entries
