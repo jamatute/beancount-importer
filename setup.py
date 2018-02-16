@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '0.0.1'
+version = '1.0.1'
 
 setup(
     name='beancount-importers',
@@ -10,6 +10,6 @@ setup(
     author_email="jmm@riseup.net",
     url="https://github.com/jamatute/beancount-importers",
     license='GPLv2',
-    packages=['beancount-importers'],
+    packages=['beancount_importers'],
     long_description=open('README.md').read(),
 )
