@@ -198,7 +198,7 @@ class TestBankImporter(unittest.TestCase):
         trans_description = 'Donation to Riseup'
         trans_amount = '30'
         trans_second_posting_account = 'Assets:CreditCard'
-        meta = data.new_metadata(self.file.name, 0)
+        meta = data.new_metadata(self.file.name, 1)
 
         self.assertEqual(
             generate_transaction(

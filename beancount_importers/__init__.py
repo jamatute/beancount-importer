@@ -124,13 +124,15 @@ class BankImporter(GeneralImporter):
         entries = []
         with open(f.name, 'r') as f:
             for index, row in enumerate(csv.reader(f, delimiter=';')):
+                if index == 0:
+                    continue
                 meta = data.new_metadata(f.name, index)
                 trans_date = datetime.datetime.strptime(row[2], "%d/%m/%Y")
                 extracted_account = self._extract_account(row[3])
                 trans_account = extracted_account['account']
                 trans_payee = extracted_account['payee']
                 trans_description = extracted_account['description']
-                trans_amount = float(row[4])
+                trans_amount = float(row[4].replace(',', '.'))
                 trans_second_posting_account = 'Assets:{}'.format(
                     re.sub(r'Data-(.*).csv', r'\1', os.path.basename(f.name)),
                 )
