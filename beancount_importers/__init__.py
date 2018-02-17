@@ -117,7 +117,9 @@ class BankImporter(GeneralImporter):
         for rule in self.alias_rules:
             if re.match(rule['regexp'], concept_string):
                 return rule
-        raise BankException('RuleNotFound')
+        raise BankException(
+            'RuleNotFound: no regexp match for {}'.format(concept_string),
+        )
 
     def extract(self, f):
         self._import_alias_rules()
