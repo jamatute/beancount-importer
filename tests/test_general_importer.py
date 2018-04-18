@@ -196,7 +196,7 @@ class TestBankImporter(unittest.TestCase):
         trans_account = 'Expenses:Bills:Email'
         trans_payee = 'Riseup'
         trans_description = 'Donation to Riseup'
-        trans_amount = '30'
+        trans_amount = '1030'
         trans_second_posting_account = 'Assets:CreditCard'
         meta = data.new_metadata(self.file.name, 1)
 

@@ -117,11 +117,16 @@ class BankImporter(GeneralImporter):
         for rule in self.alias_rules:
             if re.match(rule['regexp'], concept_string):
                 return rule
-        raise BankException('RuleNotFound')
+        raise BankException(
+            'RuleNotFound: no regexp match for {}'.format(concept_string),
+        )
 
     def extract(self, f):
         self._import_alias_rules()
         entries = []
+        main_second_posting_account = re.sub(
+            r'Data-(.*).csv', r'\1', os.path.basename(f.name),
+        )
         with open(f.name, 'r') as f:
             for index, row in enumerate(csv.reader(f, delimiter=';')):
                 if index == 0:
@@ -132,9 +137,9 @@ class BankImporter(GeneralImporter):
                 trans_account = extracted_account['account']
                 trans_payee = extracted_account['payee']
                 trans_description = extracted_account['description']
-                trans_amount = float(row[4].replace(',', '.'))
+                trans_amount = float(row[4].replace('.', '').replace(',', '.'))
                 trans_second_posting_account = 'Assets:{}'.format(
-                    re.sub(r'Data-(.*).csv', r'\1', os.path.basename(f.name)),
+                    main_second_posting_account,
                 )
                 txn = data.Transaction(
                     meta=meta,
