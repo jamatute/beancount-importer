@@ -60,7 +60,7 @@ python3 setup.py install
 ## Use
 
 ```bash
-bean-export config.py /path/to/budget.csv
+bean-extract config.py /path/to/budget.csv
 ```
 
 ## Test
